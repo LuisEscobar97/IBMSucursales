@@ -1,7 +1,8 @@
 package com.ibm.academia.RESTSucursal.models.services;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.ibm.academia.RESTSucursal.models.entities.Dummy;
 import com.ibm.academia.RESTSucursal.models.entities.Sucursal;
 import org.slf4j.Logger;
@@ -36,14 +37,25 @@ public class SucursalServiceImpl implements ISucursalService {
 
     @Override
     public String buscarTodosS() {
-        String sucursales=clienteRest.getForObject("https://www.banamex.com/localizador/jsonP/json5.json",String.class);
-        Dummy dummy=null;
+        String sucursales="";
+        char sucursalesArray[];
         ObjectMapper mapper=new ObjectMapper();
+        Gson gson= new Gson();
         try {
-             dummy=mapper.readValue(sucursales,Dummy.class);
-        } catch (JsonProcessingException e) {
+
+             sucursales=clienteRest.getForObject("https://www.banamex.com/localizador/jsonP/json5.json",String.class);
+             sucursalesArray=sucursales.toCharArray();
+             sucursales="{"+sucursales.substring(14,sucursalesArray.length-2);
+            //Dummy dummy=gson.fromJson(sucursales,Dummy.class);
+            Dummy dummy=mapper.readValue(sucursales,Dummy.class);
+            logger.info(String.valueOf(dummy.getServicios().get("Servicios").getClass()));
+
+
+        } catch (Exception e) {
          logger.info(e.getMessage());
         }
-        return dummy.getJsonCallback().toString();
+        //return dummy.getJsonCallback().toString();
+        return sucursales;
     }
+
 }
