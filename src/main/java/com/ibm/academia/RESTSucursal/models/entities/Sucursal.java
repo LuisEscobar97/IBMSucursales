@@ -15,10 +15,9 @@ public class Sucursal implements Serializable {
 
     private Integer id;
     private String estado;
-    private String municipio;
     private Double lattitud;
     private Double longitud;
-    private TIpoSucursal tIpoSucursal;
+    private String tIpoSucursal;
 
 
 }
